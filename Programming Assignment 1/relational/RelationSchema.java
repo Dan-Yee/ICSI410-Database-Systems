@@ -96,7 +96,7 @@ public class RelationSchema implements java.io.Serializable {
 	 */
 	public int size() {
 		// TODO complete this method
-		return this.attributeNames.length;
+		return this.attributeNames.length;																		// return length of the attributeNames array
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class RelationSchema implements java.io.Serializable {
 	 */
 	public String attributeName(int attributeIndex) throws InvalidAttributeIndexException {
 		// TODO complete this method
-		if(attributeIndex < 0 || attributeIndex > this.attributeNames.length - 1)
+		if(attributeIndex < 0 || attributeIndex > this.attributeNames.length - 1)								// check to make sure attributeIndex is in range of the array
 			throw new InvalidAttributeIndexException();
 		else
 			return this.attributeNames[attributeIndex];
@@ -127,7 +127,7 @@ public class RelationSchema implements java.io.Serializable {
 	 */
 	public Class<?> attributeType(int attributeIndex) throws InvalidAttributeIndexException {
 		// TODO complete this method
-		if(attributeIndex < 0 || attributeIndex > this.attributeTypes.length - 1)
+		if(attributeIndex < 0 || attributeIndex > this.attributeTypes.length - 1)								// check to make sure attributeIndex is in range of the array
 			throw new InvalidAttributeIndexException();
 		else
 			return this.attributeTypes[attributeIndex];
@@ -142,7 +142,7 @@ public class RelationSchema implements java.io.Serializable {
 	 */
 	public Integer attributeIndex(String attributeName) {
 		// TODO complete this method
-		for(int i = 0; i < this.attributeNames.length; i++)
+		for(int i = 0; i < this.attributeNames.length; i++)														// perform Linear Search to determine the index of the attributeName
 			if(this.attributeNames[i].equals(attributeName))
 				return i;
 		return null;
@@ -163,7 +163,7 @@ public class RelationSchema implements java.io.Serializable {
 		FileOutputStream outputStream = new FileOutputStream(fileName);
 		ObjectOutputStream objectOutput = new ObjectOutputStream(outputStream);
 		
-		objectOutput.writeObject(this);
+		objectOutput.writeObject(this);																			// write self to a file specified by fileName through the ObjectOutputStream
 		objectOutput.close();
 	}
 
