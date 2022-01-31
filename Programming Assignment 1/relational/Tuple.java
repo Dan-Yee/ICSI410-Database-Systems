@@ -115,7 +115,7 @@ public class Tuple implements java.io.Serializable {
 	 */
 	public void writeAttributes(ObjectOutputStream out) throws IOException {
 		// TODO complete this method
-		for(Object o : this.attributeValues)
+		for(Object o : this.attributeValues)																			// write every object through the ObjectOutputStream
 			this.write(o, out);
 	}
 
@@ -155,11 +155,11 @@ public class Tuple implements java.io.Serializable {
 	 */
 	protected void write(Object o, ObjectOutputStream out) throws IOException {
 		// TODO complete this method
-		if(o.getClass().isInstance(Integer.class))
+		if(o.getClass().equals(Integer.class))																			// use ObjectOutputStream#writeInt if o is an Integer
 			out.writeInt((Integer)o);
-		else if(o.getClass().isInstance(Double.class))
+		else if(o.getClass().equals(Double.class))																		// use ObjectOutputStream#writeDouble if o is a Double
 			out.writeDouble((Double)o);
-		else
+		else																											// use ObjectOutputStream#writeObject otherwise
 			out.writeObject(o);
 	}
 
@@ -177,14 +177,12 @@ public class Tuple implements java.io.Serializable {
 	 *             if the class of a serialized object cannot be found
 	 */
 	protected Object read(Class<?> type, ObjectInputStream in) throws IOException, ClassNotFoundException {
-		// TODO complete this method
-		System.out.println(type.getClass());
-		
-		if(type.isInstance(Integer.class))
+		// TODO complete this method		
+		if(type.equals(Integer.class))																					// use ObjectInputStream#readInt if type is an Integer
 			return in.readInt();
-		else if(type.isInstance(Double.class))
+		else if(type.equals(Double.class))																				// use ObjectInputStream#readDouble if type is a Double
 			return in.readDouble();
-		else
+		else																											// use ObjectInputStream#readObject otherwise
 			return in.readObject();
 	}
 }
