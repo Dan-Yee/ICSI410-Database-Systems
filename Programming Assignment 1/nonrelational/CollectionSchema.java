@@ -1,5 +1,6 @@
 package hdb.data.nonrelational;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -98,7 +99,19 @@ public class CollectionSchema implements java.io.Serializable {
 	 */
 	public int[] attributeIndex(String attributeName) {
 		// TODO complete this method
-		return null;
+		int[] attrIndex = new int[1];
+		
+		if(this.name2index.get(attributeName) != null) {															// if the attribute exists
+			attrIndex[0] = this.name2index.get(attributeName);														// get the index returned from the HashMap and set to the array
+			return attrIndex;
+		} else {
+			int newIndex = this.name2index.size();																	// statically save the index of the new attribute
+			
+			this.name2index.put(attributeName, newIndex);															// map the attributeName to its index
+			this.index2name.put(newIndex, attributeName);															// map the new index to its attributeName
+			attrIndex[0] = newIndex;																				// set the return arrays value at index 0 to the new index
+			return attrIndex;
+		}
 	}
 
 	/**
@@ -112,7 +125,10 @@ public class CollectionSchema implements java.io.Serializable {
 	 */
 	public String attributeName(int[] attributeIndex) throws InvalidAttributeIndexException {
 		// TODO complete this method
-		return null;
+		if(this.index2name.get(attributeIndex[0]) == null)															// if the attribute at a specified index doesn't exist, throw an exception
+			throw new InvalidAttributeIndexException();
+		else																										// otherwise, return the attribute name at the given index
+			return this.index2name.get(attributeIndex[0]);
 	}
 
 }
