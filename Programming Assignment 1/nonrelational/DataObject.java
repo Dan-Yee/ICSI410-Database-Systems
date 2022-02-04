@@ -128,7 +128,7 @@ public class DataObject implements java.io.Serializable {
 				Object value = in.readObject();
 				if(this.schema.attributeName(i) == null)															// check to see if the attribute at the index is registered 
 					throw new InvalidAttributeIndexException();
-				else
+				else																								// set the attribute read from the input stream assuming the data was given in the correct order
 					this.setAttribute(this.schema.attributeName(i), value);
 			}
 		} catch(EOFException e) {
