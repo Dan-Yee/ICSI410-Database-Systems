@@ -1,5 +1,6 @@
 package hdb.data.nonrelational;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -99,13 +100,8 @@ public class DataObject implements java.io.Serializable {
 	 */
 	public void writeAttributes(ObjectOutputStream out) throws IOException {
 		// TODO complete this method
-		/*for(Entry<Integer, Object> e : this.index2value.entrySet()) {
-			out.writeObject(e.getKey());
-			out.writeObject(e.getValue());
-		}*/
-		/*for(Object o : this.index2value.values())
-			out.writeObject(o);*/
-		out.writeObject(index2value);
+		for(Object value : this.index2value.values())																// write the attribute value to the ObjectOutputStream
+			out.writeObject(value);
 	}
 
 	/**
@@ -125,6 +121,18 @@ public class DataObject implements java.io.Serializable {
 	public DataObject(CollectionSchema schema, ObjectInputStream in)
 			throws IOException, ClassNotFoundException, InvalidAttributeIndexException {
 		// TODO complete this method
+		this.schema = schema;																						// set the CollectionSchema for this DataObject
+		
+		try {
+			for(int i = 0;; i++) {																					// continue to read objects from the ObjectInputStream until EOFException is thrown
+				Object value = in.readObject();
+				if(this.schema.attributeName(i) == null)															// check to see if the attribute at the index is registered 
+					throw new InvalidAttributeIndexException();
+				else
+					this.setAttribute(this.schema.attributeName(i), value);
+			}
+		} catch(EOFException e) {
+			System.out.println("End of ObjectInputStream");
+		}
 	}
-
 }
