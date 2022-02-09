@@ -99,19 +99,27 @@ public class CollectionSchema implements java.io.Serializable {
 	 */
 	public int[] attributeIndex(String attributeName) {
 		// TODO complete this method
-		int[] attrIndex = new int[1];
+		int[] attrIndex;
 		
-		if(this.name2index.get(attributeName) != null) {															// if the attribute exists
-			attrIndex[0] = this.name2index.get(attributeName);														// get the index returned from the HashMap and set to the array
-			return attrIndex;
-		} else {
-			int newIndex = this.name2index.size();																	// statically save the index of the new attribute
-			
-			this.name2index.put(attributeName, newIndex);															// map the attributeName to its index
-			this.index2name.put(newIndex, attributeName);															// map the new index to its attributeName
-			attrIndex[0] = newIndex;																				// set the return arrays value at index 0 to the new index
-			return attrIndex;
+		if(attributeName.indexOf('.') > 0) {																								// hierarchical data expected
+			attrIndex = new int[2];																											// array of size 2 if hierarchical data is expected
+			attrIndex[0] = this.attributeIndex(attributeName.substring(0, attributeName.indexOf('.')))[0];									// index of the subschema in index2schema map
+			if(this.subschema(attrIndex[0]) == null)																						// if the subschema does not exist, create it
+				this.index2schema.put(attrIndex[0], new CollectionSchema());
+			attrIndex[1] = (this.subschema(attrIndex[0])).attributeIndex(attributeName.substring(attributeName.indexOf('.') + 1))[0]; 		// find the sub-attribute. if it does not exist, add it and return the new index
+		} else {																															// hierarchical data not expected
+			attrIndex = new int[1];																											
+			if(this.name2index.get(attributeName) != null)																					// if the attribute exists
+				attrIndex[0] = this.name2index.get(attributeName);																			// get the index returned from the HashMap and set to the array
+			else {
+				int newIndex = this.name2index.size();																						// statically save the index of the new attribute
+				
+				this.name2index.put(attributeName, newIndex);																				// map the attributeName to its index
+				this.index2name.put(newIndex, attributeName);																				// map the new index to its attributeName
+				attrIndex[0] = newIndex;																									// set the return arrays value at index 0 to the new index
+			}
 		}
+		return attrIndex;
 	}
 
 	/**
@@ -125,10 +133,17 @@ public class CollectionSchema implements java.io.Serializable {
 	 */
 	public String attributeName(int[] attributeIndex) throws InvalidAttributeIndexException {
 		// TODO complete this method
-		if(this.index2name.get(attributeIndex[0]) == null)															// if the attribute at a specified index doesn't exist, throw an exception
-			throw new InvalidAttributeIndexException();
-		else																										// otherwise, return the attribute name at the given index
-			return this.index2name.get(attributeIndex[0]);
+		if(attributeIndex.length > 1) {																					// expect to return hierarchical data if the attributeIndex is more than 1 element														
+			if(this.subschema(attributeIndex[0]) == null)																// check to see if the subschema exists
+				throw new InvalidAttributeIndexException();
+			else																										// return the main attribute concatenated with the sub-attribute
+				return this.index2name.get(attributeIndex[0]) + "." + this.subschema(attributeIndex[0]).attributeName(attributeIndex[1]);
+		} else {
+			if(this.index2name.get(attributeIndex[0]) == null)															// if the attribute at a specified index doesn't exist, throw an exception
+				throw new InvalidAttributeIndexException();
+			else																										// otherwise, return the attribute name at the given index
+				return this.index2name.get(attributeIndex[0]);
+		}
 	}
 
 }
