@@ -4,6 +4,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -75,7 +76,14 @@ public class DataObject implements java.io.Serializable {
 	public void setAttribute(String attributeName, Object o) {
 		// TODO complete this method
 		int[] index = this.schema.attributeIndex(attributeName);
-		this.index2value.put(index[0], o);
+		
+		if(index.length > 1) {
+			//this.schema.subschema(index[0]).index2name.put(index[1], );
+			//System.out.println("Subschema index2name: " + this.schema.subschema(index[0]).index2name.toString());
+			this.index2value.put(index[0], this.schema.subschema(index[0]));
+		} else {
+			this.index2value.put(index[0], o);
+		}
 	}
 
 	/**
@@ -87,7 +95,10 @@ public class DataObject implements java.io.Serializable {
 	 */
 	public Object attributeValue(int[] attributeIndex) {
 		// TODO complete this method
-		return this.index2value.get(attributeIndex[0]);
+		if(attributeIndex.length > 1) {
+			return 1;
+		} else
+			return this.index2value.get(attributeIndex[0]);
 	}
 
 	/**
