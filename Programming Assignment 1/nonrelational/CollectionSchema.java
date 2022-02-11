@@ -133,15 +133,15 @@ public class CollectionSchema implements java.io.Serializable {
 	 */
 	public String attributeName(int[] attributeIndex) throws InvalidAttributeIndexException {
 		// TODO complete this method
-		if(attributeIndex.length > 1) {																					// expect to return hierarchical data if the attributeIndex is more than 1 element														
-			if(this.subschema(attributeIndex[0]) == null)																// check to see if the subschema exists
+		if(attributeIndex.length > 1) {																										// expect to return hierarchical data if the attributeIndex is more than 1 element														
+			if(this.subschema(attributeIndex[0]) == null)																					// check to see if the subschema exists
 				throw new InvalidAttributeIndexException();
-			else																										// return the main attribute concatenated with the sub-attribute
+			else																															// return the main attribute concatenated with the sub-attribute
 				return this.index2name.get(attributeIndex[0]) + "." + this.subschema(attributeIndex[0]).attributeName(attributeIndex[1]);
 		} else {
-			if(this.index2name.get(attributeIndex[0]) == null)															// if the attribute at a specified index doesn't exist, throw an exception
+			if(this.index2name.get(attributeIndex[0]) == null)																				// if the attribute at a specified index doesn't exist, throw an exception
 				throw new InvalidAttributeIndexException();
-			else																										// otherwise, return the attribute name at the given index
+			else																															// otherwise, return the attribute name at the given index
 				return this.index2name.get(attributeIndex[0]);
 		}
 	}
